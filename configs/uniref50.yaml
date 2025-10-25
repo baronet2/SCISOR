@@ -1,0 +1,43 @@
+data:
+    data: uniref50
+    N: 33
+    train_path: data/uniref50_processed
+    valid_path: data/uniref50_processed_test
+
+model:
+    seed: 0
+    model: ShorteningSCUD
+    forward_kwargs:
+        pad_token_id: 1
+        choices: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+        n_gen_samples: 10
+        window_size: 2048
+        alpha_rate: 1.1
+        structured: true
+        rao_blackwellize: true
+    t_max: 0.9
+    restart: false
+
+architecture:
+    nn_params:
+        d_embedding: 128
+        depth: 2
+        slim: true
+        hf_model_name: esm2_t12_35M_UR50D
+        pretrained: True
+    x0_model_class: FAESM
+
+train:
+    batch_size: 64
+    n_epoch: 5
+    lr: 0.0001
+    lr_warmup: 1000
+    grad_clip_val: 1
+    weight_decay: 0
+    accumulate: 4
+    val_check_interval: 50
+
+sampling:
+    gen_trans_step: 0
+
+num_workers: 2
