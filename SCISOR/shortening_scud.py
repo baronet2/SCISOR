@@ -57,7 +57,6 @@ class ShorteningSCUD(ShorteningDiffusion):
 
         return vb_loss, {
             "vb_loss": vb_loss.detach().item(),
-            "ce_loss": 0,  # TODO Actually calculate this?
             "t": t.mean(),
             "x_t_length": x_t.shape[-1] - 2,
             "x_0_length": (x != self.pad_token_id).sum(dim=1).float().mean() - 2,
@@ -87,14 +86,12 @@ class ShorteningSCUD(ShorteningDiffusion):
 
         return vb_loss, {
             "vb_loss": vb_loss.detach().item(),
-            "ce_loss": 0,  # TODO Actually calculate this?
             "t": t.mean(),
             "x_t_length": x_t.shape[-1] - 2,
             "x_0_length": (x != self.pad_token_id).sum(dim=1).float().mean() - 2,
         }
 
     def base_predict(self, x_t, t, attn_mask, S=None):
-        # TODO Ensure model is using attn_mask correctly
         attn_mask = (x_t != self.pad_token_id).int()
         with autocast("cuda", dtype=torch.bfloat16):
             preds = self.x0_model(x_t, t, attn_mask, S)
@@ -121,7 +118,6 @@ class ShorteningSCUD(ShorteningDiffusion):
     def p_sample(self, x, t, attn_mask, S, num_dels, temperature=1):
         if num_dels.sum() == 0:
             return x, []
-        # TODO Use Gumbel softmax trick for more numerically-stable sampling?
         b, l = x.shape
         if self.window_size is not None and l > self.window_size:
             model_probs = self.predict_with_windows(x, t, S)

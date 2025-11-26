@@ -1,5 +1,4 @@
 import torch
-import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_sequence
 from transformers import AutoTokenizer
 
@@ -38,26 +37,6 @@ class BatchProcessor:
             padding_value=self.pad_token_id,
         )
         return x
-
-    def calc_p0(self, dataloader, n_counts=1000):
-        p0 = torch.zeros(self.num_classes)
-        for batch in dataloader:
-            if p0.sum() > n_counts:
-                break
-            x = self.tokenize_batch(batch)
-            new = (
-                F.one_hot(x.long(), num_classes=self.num_classes)
-                .to(torch.float32)
-                .view((-1, self.num_classes))
-                .sum(0)
-            )
-            p0 = p0 + new
-
-        classes_to_exclude = list(
-            set(range(self.num_classes)) - set(map(int, self.choices))
-        )
-        p0[classes_to_exclude] = 0
-        self.p0 = p0 / p0.sum()
 
     def sample_point_given_S(self, x, S):
         Ls = (x != self.pad_token_id).sum(dim=1)

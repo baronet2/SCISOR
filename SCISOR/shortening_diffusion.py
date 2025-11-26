@@ -62,7 +62,6 @@ class ShorteningDiffusion(ContinuousTimeDiffusion):
         return probs
 
     def get_kl_t1(self, x):
-        B = len(self.choices)
         S, x_t = self.sample_point_given_t(
             x, torch.ones(x.shape[0], device=x.device) * self.t_max
         )

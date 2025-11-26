@@ -3,13 +3,11 @@ import tempfile
 import numpy as np
 import pytorch_lightning as pl
 import torch
-import torch.nn.functional as F
 import wandb
 from PIL import Image
 from pytorch_lightning.utilities import rank_zero_only
 from torch.optim.lr_scheduler import LambdaLR
 from torchvision.utils import make_grid
-from tqdm import tqdm
 
 
 def get_gif(sample_x, sample_a, model, gen_trans_step, batch_size):
@@ -69,7 +67,6 @@ def get_text(
     if gen_trans_step == 0:
         return None, None
     print("Sampling sequences...")
-    # TODO Use histogram of X_0 lengths to sample sequence length rather than just use sample_x?
     p = model.get_stationary()
     init_noise = (
         torch.multinomial(p, batch_size * sample_x.shape[1], replacement=True)
@@ -128,36 +125,6 @@ class DiffusionTrainer(pl.LightningModule):
 
     def get_kl_t1(self, x):
         return NotImplementedError
-
-    def calc_p0(self, dataloader):
-        p0 = torch.ones(self.num_classes)
-        first_letter_probs = torch.ones(self.num_classes)
-        pbar = tqdm(total=self.n_stat_samples)
-        for i, batch in tqdm(enumerate(dataloader)):
-            if p0.sum() > self.n_stat_samples:
-                break
-            x = batch[0].long()
-            new = (
-                F.one_hot(x, num_classes=self.num_classes)
-                .to(torch.float32)
-                .view((-1, self.num_classes))
-                .sum(0)
-            )
-            p0 = p0.to(x.device) + new
-            first_letter_probs = first_letter_probs.to(x.device) + F.one_hot(
-                x[:, 1], num_classes=self.num_classes
-            ).sum(dim=0)
-            pbar.update(new.sum().item())
-        pbar.close()
-
-        classes_to_exclude = list(
-            set(range(self.num_classes)) - set(map(int, self.choices))
-        )
-        p0[classes_to_exclude] = 0
-        self.p0 = p0 / p0.sum()
-        first_letter_probs[classes_to_exclude] = 0
-        self.first_letter_probs = first_letter_probs / first_letter_probs.sum()
-        self.register_buffer("p0", p0)
 
     def training_step(self, batch, batch_idx):
         if batch[0].size(0) == 0:
