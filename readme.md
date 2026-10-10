@@ -2,12 +2,12 @@
 
 [Ethan Baron](https://baronet2.github.io/)\*, [Alan N. Amin](https://alannawzadamin.github.io)\*, [Ruben Weitzman](https://rubenweitzman.github.io/), [Debora Susan Marks](https://www.deboramarkslab.com/deboramarks), [Andrew Gordon Wilson](https://cims.nyu.edu/~andrewgw/). * equal contribution
 
-Paper: https://openreview.net/pdf?id=YqQoNJWY22
+Paper: https://arxiv.org/abs/2511.07390
 
 ![SCISOR learns to reverse a noising process of random insertions](images/concept.png)
 
 ## Abstract
-Many proteins useful in modern medicine or bioengineering are challenging to make in the lab, fuse with other proteins in cells, or deliver to tissues in the body because their sequences are too long. Shortening these sequences typically involves costly, time-consuming experimental campaigns. Ideally, we could instead use modern models of massive databases of sequences from nature to learn how to propose shrunken proteins that resemble sequences found in nature. Unfortunately, these models struggle to efficiently search the combinatorial space of all deletions, and are not trained with inductive biases to learn how to delete.
+Many proteins useful in modern medicine or bioengineering are challenging to make in the lab, fuse with other proteins in cells, or deliver to tissues in the body, because their sequences are too long. Shortening these sequences typically involves costly, time-consuming experimental campaigns. Ideally, we could instead use modern models of massive databases of sequences from nature to learn how to propose shrunken proteins that resemble sequences found in nature. Unfortunately, these models struggle to efficiently search the combinatorial space of all deletions, and are not trained with inductive biases to learn how to delete.
 
 To address this gap, we propose SCISOR, a novel discrete diffusion model that deletes letters from sequences to generate protein samples that resemble those found in nature. To do so, SCISOR trains a de-noiser to reverse a forward noising process that adds random insertions to natural sequences.
 
@@ -18,13 +18,14 @@ As a generative model, SCISOR fits evolutionary sequence data competitively with
 If you use SCISOR, please cite our paper:
 
 ```
-@inproceedings{SCISOR,
-  title        = {A Diffusion Model to Shrink Proteins While Maintaining their Function},
-  author       = {Baron, Ethan and Amin, Alan\,N. and Weitzman, Ruben and Marks, Debora\,S. and Wilson, Andrew\,G.},
-  booktitle    = {ICML Workshop on Exploration in AI Today},
-  year         = {2025},
-  month        = {Jul},
-  url          = {https://openreview.net/pdf?id=YqQoNJWY22},
+@misc{SCISOR,
+      title={A Diffusion Model to Shrink Proteins While Maintaining Their Function}, 
+      author={Ethan Baron and Alan N. Amin and Ruben Weitzman and Debora Marks and Andrew Gordon Wilson},
+      year={2025},
+      eprint={2511.07390},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2511.07390}, 
 }
 ```
 
