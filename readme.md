@@ -31,7 +31,7 @@ If you use SCISOR, please cite our paper:
 
 ## Usage
 
-We provide the trained SCISOR models on HuggingFace at https://huggingface.co/SCISOR/SCISOR/tree/main.
+We provide the trained SCISOR models on HuggingFace at https://huggingface.co/SCISOR/SCISOR/tree/main. By default, the scripts in this repository use `SCISOR_U90_S.ckpt` for fast experimentation. For best shrinking performance, we recommend using `SCISOR_U90_L.ckpt`.
 
 ### Installation
 
